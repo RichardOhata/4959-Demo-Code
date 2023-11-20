@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Counter</title>
+  <style>
+     body {
+      margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px;
+    }
+
+    h1, p {
+      
+    }
+
+    .button-container {
+      display: flex; /* Set the container to flex */
+      gap: 10px; /* Add some spacing between buttons */
+    }
+
+    button {
+      padding: 10px;
+      font-size: 16px; 
+    }
+  </style>
+</head>
+<body>
+
+<h1>Counter</h1>
+<p id="counterValue">Counter Value: Loading...</p>
+<button onclick="incrementCounter()">+</button>
+<button onclick="decrementCounter()">-</button>
+
+<script>
+    // Function to send an HTTP request to increment the counter using xhttp
+    function incrementCounter() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var data = JSON.parse(this.responseText);
+          document.getElementById('counterValue').textContent = `Counter Value: ${data.counter}`;
+        }
+      };
+      xhttp.open("POST", "http://localhost:8000/increment", true);
+      xhttp.setRequestHeader("Content-type", "application/json");
+      xhttp.send();
+    }
+
+    function decrementCounter() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var data = JSON.parse(this.responseText);
+          document.getElementById('counterValue').textContent = `Counter Value: ${data.counter}`;
+        }
+      };
+      xhttp.open("POST", "http://localhost:8000/decrement", true);
+      xhttp.setRequestHeader("Content-type", "application/json");
+      xhttp.send();
+    }
+    
+    function initalCounter() {
+    // Fetch the initial counter value when the page loads using xhttp
+    var xhttpInitial = new XMLHttpRequest();
+    xhttpInitial.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        const value = JSON.parse(this.responseText)
+        document.getElementById('counterValue').textContent = `Counter Value: ${value.counter}`;
+      }
+    };
+    xhttpInitial.open("GET", "http://localhost:8000/", true);
+    xhttpInitial.send();
+}
+
+    setInterval(initalCounter, 1000)
+  </script>
+
+</body>
+</html>
